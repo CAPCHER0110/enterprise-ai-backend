@@ -6,8 +6,6 @@
 
 ![Architecture](https://img.shields.io/badge/Architecture-Microservices-blue) ![Python](https://img.shields.io/badge/Python-3.10%2B-green) ![License](https://img.shields.io/badge/License-MIT-purple)
 
-</div>
-
 ## 🏗 系统架构
 
 本项目实现了一个可扩展的 **检索增强生成 (RAG)** 管道，旨在解决企业级应用常见的挑战：数据幻觉、上下文窗口限制和无状态交互。
