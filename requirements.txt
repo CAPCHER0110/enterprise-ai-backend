@@ -1,0 +1,38 @@
+# Enterprise AI Backend - Production Dependencies
+# Python 3.10+
+
+# Web 框架
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic-settings>=2.1.0
+
+# AI 核心栈 (LlamaIndex 全家桶)
+llama-index-core>=0.10.0
+llama-index-llms-openai>=0.1.0
+llama-index-llms-anthropic>=0.1.0
+llama-index-embeddings-huggingface>=0.1.0
+llama-index-vector-stores-milvus>=0.1.0
+llama-index-vector-stores-chroma>=0.1.0
+llama-index-vector-stores-pinecone>=0.1.0
+llama-index-vector-stores-qdrant>=0.1.0
+llama-index-storage-chat-store-redis>=0.1.0
+
+# 记忆管理（可选，根据使用的提供商安装）
+langchain>=0.1.0  # LangChain记忆
+langchain-community>=0.0.20  # LangChain社区集成
+mem0ai>=0.1.0  # Mem0记忆管理
+
+# 基础设施驱动
+pymilvus>=2.3.0
+redis[hiredis]>=5.0.0
+python-multipart>=0.0.9
+httpx>=0.26.0
+
+# 向量数据库驱动（可选，根据使用的提供商安装）
+chromadb>=0.4.0  # ChromaDB
+pinecone-client>=2.2.0  # Pinecone
+qdrant-client>=1.6.0  # Qdrant
+
+# 监控和指标
+prometheus-client>=0.19.0  # Prometheus客户端
+

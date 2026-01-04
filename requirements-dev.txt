@@ -1,0 +1,11 @@
+# Enterprise AI Backend - Development Dependencies
+# 安装开发依赖: pip install -r requirements-dev.txt
+
+# 包含生产依赖
+-r requirements.txt
+
+# 开发工具
+pytest>=8.0.0
+mypy>=1.8.0
+black>=24.0.0
+
