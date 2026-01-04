@@ -5,7 +5,7 @@ Enterprise AI Backend - 主入口
 """
 from contextlib import asynccontextmanager
 from datetime import datetime
-from typing import Any
+from typing import Any, Union
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,9 +14,13 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.core.logging import logger
 from app.core.exceptions import add_exception_handlers
-from app.core.middleware import RequestIDMiddleware, LoggingMiddleware, MetricsMiddleware
-from app.core.rate_limit_middleware import RateLimitMiddleware
-from app.core.request_validator import RequestSizeMiddleware
+from app.core.middleware import (
+    RequestIDMiddleware, 
+    LoggingMiddleware, 
+    MetricsMiddleware,
+    RateLimitMiddleware,
+    RequestSizeMiddleware
+)
 from app.core.connections import RedisConnectionPool
 from app.core.config_validator import ConfigValidator
 from app.core.shutdown import shutdown_manager, register_cleanup
@@ -152,7 +156,7 @@ app.include_router(memory.router, prefix=f"{settings.API_V1_STR}/memory", tags=[
 add_exception_handlers(app)
 
 @app.get("/health")
-async def health_check(request: Request) -> dict[str, Any]:
+async def health_check(request: Request) -> Union[dict[str, Any], JSONResponse]:
     """
     健康检查端点 - 检查服务及其依赖的状态
     
@@ -266,7 +270,7 @@ async def get_metrics() -> dict[str, Any]:
 
 
 @app.get("/ready")
-async def readiness_check() -> dict[str, str]:
+async def readiness_check() -> Union[dict[str, str], JSONResponse]:
     """
     就绪检查端点 - 用于 Kubernetes 就绪探针
     

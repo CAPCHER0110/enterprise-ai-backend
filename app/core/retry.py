@@ -24,14 +24,22 @@ class RetryConfig:
         max_retries: 最大重试次数
         initial_delay: 初始延迟（秒）
         max_delay: 最大延迟（秒）
-        exponential_base: 指数退避基数
+        exponential_base: 指数退避基数 (别名: backoff_factor)
         jitter: 是否添加随机抖动
+        circuit_breaker_enabled: 是否启用断路器
     """
     max_retries: int = 3
     initial_delay: float = 1.0
     max_delay: float = 60.0
     exponential_base: float = 2.0
     jitter: bool = True
+    circuit_breaker_enabled: bool = False
+    
+    # 别名属性，为了兼容测试
+    @property
+    def backoff_factor(self) -> float:
+        """exponential_base 的别名"""
+        return self.exponential_base
     
     def __post_init__(self) -> None:
         """验证配置"""
