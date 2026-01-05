@@ -10,6 +10,8 @@ services:
       - MILVUS_URI=http://milvus-standalone:19530
       - REDIS_URL=redis://redis:6379/0
       - LLM_API_BASE=http://vllm:8000/v1 # 指向 docker-compose 网络中的 vLLM
+      - HF_ENDPOINT=https://hf-mirror.com
+      - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN}
     depends_on:
       - redis
       - milvus-standalone
@@ -18,9 +20,16 @@ services:
   # 2. vLLM 推理服务 (需要 NVIDIA GPU)
   vllm:
     image: vllm/vllm-openai:latest
-    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
     environment:
       - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN}
+      - HF_ENDPOINT=https://hf-mirror.com
     volumes:
       - ~/.cache/huggingface:/root/.cache/huggingface
     ports:

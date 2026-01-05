@@ -1,6 +1,6 @@
 from typing import Optional, AsyncGenerator, Any, Union
 from llama_index.core import VectorStoreIndex
-from llama_index.core.base.llms.types import BaseLLM
+from llama_index.core.llms import LLM as BaseLLM
 from llama_index.core.memory import ChatMemoryBuffer
 from app.core.config import settings
 from app.utils.llm_factory import get_index, create_llm_instance

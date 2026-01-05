@@ -83,7 +83,8 @@ class Settings(BaseSettings):
     LLM_MAX_TOKENS: int = 1024
     
     # Embedding 模型 (建议使用 HuggingFace 本地运行)
-    EMBEDDING_MODEL_NAME: str = "BAAI/bge-m3"
+    #EMBEDDING_MODEL_NAME: str = "BAAI/bge-m3"
+    EMBEDDING_MODEL_NAME: str = "BAAI/bge-small-zh-v1.5"
     EMBEDDING_CACHE_FOLDER: str = "./model_cache"
     
     # RAG 参数

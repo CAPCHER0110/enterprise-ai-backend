@@ -16,8 +16,12 @@ COPY requirements.txt ./
 # 创建虚拟环境并安装依赖
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+#RUN pip install --upgrade pip && \
+#    pip install --no-cache-dir -r requirements.txt
+#RUN pip install --upgrade pip && \
+#    pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # ==========================================
 # Stage 2: Runtime (运行阶段)
@@ -38,6 +42,10 @@ COPY ./app ./app
 
 # 创建非 root 用户运行 (安全最佳实践)
 RUN useradd -m myuser
+
+# 这样 myuser 才能在运行时创建 model_cache 目录
+RUN chown -R myuser:myuser /app
+
 USER myuser
 
 # 暴露端口

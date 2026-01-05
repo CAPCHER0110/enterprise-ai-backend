@@ -1,5 +1,5 @@
 from typing import Optional, Union
-from llama_index.core.base.llms.types import BaseLLM
+from llama_index.core.llms import LLM as BaseLLM
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import Settings as LlamaSettings
 from llama_index.core import VectorStoreIndex, StorageContext

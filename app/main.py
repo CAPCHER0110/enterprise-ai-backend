@@ -155,7 +155,7 @@ app.include_router(memory.router, prefix=f"{settings.API_V1_STR}/memory", tags=[
 # 注册异常处理器
 add_exception_handlers(app)
 
-@app.get("/health")
+@app.get("/health", response_model=None)
 async def health_check(request: Request) -> Union[dict[str, Any], JSONResponse]:
     """
     健康检查端点 - 检查服务及其依赖的状态
@@ -269,7 +269,7 @@ async def get_metrics() -> dict[str, Any]:
     return metrics
 
 
-@app.get("/ready")
+@app.get("/ready", response_model=None)
 async def readiness_check() -> Union[dict[str, str], JSONResponse]:
     """
     就绪检查端点 - 用于 Kubernetes 就绪探针
