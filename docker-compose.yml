@@ -10,6 +10,10 @@ services:
       - LLM_API_BASE=http://vllm:8000/v1 # 指向 docker-compose 网络中的 vLLM
       - HF_ENDPOINT=https://hf-mirror.com
       - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN}
+      - TOKENIZERS_PARALLELISM=false
+      - OMP_NUM_THREADS=1             # 必加，防止 PyTorch 死锁
+      - MKL_NUM_THREADS=1             # [新增] 限制 Intel MKL 库线程数
+      - REDIS_OMIT_HIREDIS=1
     depends_on:
       - redis
       - milvus-standalone
@@ -17,7 +21,7 @@ services:
 
   # 2. vLLM 推理服务 (需要 NVIDIA GPU)
   vllm:
-    image: vllm/vllm-openai:latest
+    image: vllm/vllm-openai:v0.6.0
     deploy:
       resources:
         reservations:
@@ -32,7 +36,7 @@ services:
       - ~/.cache/huggingface:/root/.cache/huggingface
     ports:
       - "8000:8000"
-    command: --model Qwen/Qwen2.5-1.5B-Instruct --api-key ${LLM_API_KEY} --gpu-memory-utilization 0.85
+    command: --model Qwen/Qwen2.5-1.5B-Instruct --api-key ${LLM_API_KEY} --gpu-memory-utilization 0.8 --dtype=half
 
   # 3. Redis (记忆存储)
   redis:
@@ -61,7 +65,7 @@ services:
   # Milvus 的依赖组件 (Etcd + MinIO)
   etcd:
     image: quay.io/coreos/etcd:v3.5.0
-    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls=http://0.0.0.0:2379
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls=http://0.0.0.0:2379 --data-dir /etcd
     volumes:
       - etcd_data:/etcd
 

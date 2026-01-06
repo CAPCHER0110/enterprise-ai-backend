@@ -87,7 +87,9 @@ async def lifespan(app: FastAPI):
         
         # 4. 初始化 Redis 连接池
         try:
+            print("DEBUG: Starting Redis health check...")
             await RedisConnectionPool.health_check()
+
             logger.info("✓ Redis connection pool initialized")
         except Exception as e:
             startup_errors.append(f"Redis: {e}")

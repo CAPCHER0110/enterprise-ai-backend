@@ -134,23 +134,34 @@ def add_exception_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request, exc: RequestValidationError):
-        """处理请求验证错误"""
-        errors = exc.errors()
-        # 简化错误信息用于日志
-        error_summary = [f"{e.get('loc', ['unknown'])[-1]}: {e.get('msg', 'invalid')}" for e in errors[:3]]
-        logger.warning(
-            f"Validation error: {', '.join(error_summary)}",
-            extra={"path": request.url.path, "errors_count": len(errors)}
-        )
+        """
+        处理请求参数验证异常
+        """
+        # 获取原始错误列表
+        errors = []
+        for error in exc.errors():
+            # 浅拷贝错误对象，避免修改原始引用
+            error_copy = error.copy()
+        
+            # 修复 Pydantic v2 'input' 字段是 bytes 导致 json 序列化失败的问题
+            if "input" in error_copy:
+                if isinstance(error_copy["input"], bytes):
+                    try:
+                        # 尝试解码为字符串
+                        error_copy["input"] = error_copy["input"].decode("utf-8")
+                    except Exception:
+                        # 解码失败则直接转为字符串表示
+                        error_copy["input"] = str(error_copy["input"])
+        
+            errors.append(error_copy)
+
         return JSONResponse(
             status_code=422,
             content={
-                "error": "Validation failed",
-                "code": "validation_error",
-                "details": errors,
-                "path": str(request.url.path)
+                "detail": errors,
+                "body": errors  # 兼容某些前端可能读取 body 字段
             },
-        )
+    )
 
     @app.exception_handler(ValueError)
     async def value_error_handler(request: Request, exc: ValueError):

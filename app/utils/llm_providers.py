@@ -10,6 +10,7 @@ from llama_index.llms.anthropic import Anthropic
 from app.core.config import settings
 from app.core.logging import logger
 from app.core.exceptions import ValidationException, ConnectionException
+from llama_index.llms.openai_like import OpenAILike
 
 
 LLMProvider = Literal["openai", "anthropic", "vllm"]
@@ -31,7 +32,7 @@ class LLMProviderFactory:
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
         timeout: Optional[int] = None
-    ) -> Union[OpenAI, Anthropic]:
+    ) -> Union[OpenAI, OpenAILike, Anthropic]:
         """
         创建LLM实例
         
@@ -144,6 +145,7 @@ class LLMProviderFactory:
         # 如果指定了api_base，使用自定义端点（如vLLM）
         if api_base:
             llm_kwargs["api_base"] = api_base
+            llm_kwargs["context_window"] = 4096
             logger.info(f"Creating OpenAI-compatible LLM: {model} at {api_base}")
         else:
             logger.info(f"Creating OpenAI LLM: {model}")
@@ -179,7 +181,7 @@ class LLMProviderFactory:
         temperature: float = 0.1,
         max_tokens: int = 1024,
         timeout: int = 30
-    ) -> OpenAI:
+    ) -> OpenAILike:
         """
         创建vLLM LLM实例（通过OpenAI兼容接口）
         
@@ -191,15 +193,26 @@ class LLMProviderFactory:
                 "Please set LLM_API_BASE in configuration."
             )
         
-        logger.info(f"Creating vLLM LLM: {model} at {api_base}")
-        
-        return OpenAI(
+        #logger.info(f"Creating vLLM LLM: {model} at {api_base}")
+        logger.info(f"Creating vLLM (OpenAI-Like) LLM: {model} at {api_base}")
+
+        return OpenAILike(
             model=model,
             api_base=api_base,
             api_key=api_key,  # vLLM通常可以接受任意值，但必须有
             temperature=temperature,
             max_tokens=max_tokens,
-            timeout=timeout
+            timeout=timeout,
+            context_window=4096,
+            additional_kwargs={
+                # 【关键修改】标准 OpenAI 参数直接写，非标准的放 extra_body 里
+                "stop": ["<|im_end|>", "<|endoftext|>", "User:", "Assistant:"],
+
+                # vLLM 特有参数必须放在 extra_body 中，否则会被 OpenAI 客户端拦截
+                "extra_body": {
+                    "repetition_penalty": 1.2,
+                }
+            },
         )
     
     @staticmethod

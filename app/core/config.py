@@ -20,8 +20,8 @@ class Settings(BaseSettings):
     # Milvus配置
     MILVUS_URI: str = "./milvus_data.db"  # 开发环境用本地文件，生产环境换成 "http://milvus:19530"
     MILVUS_TOKEN: str = ""  # 如果有鉴权则填写
-    MILVUS_COLLECTION: str = "enterprise_knowledge"
-    MILVUS_DIM: int = 1024
+    MILVUS_COLLECTION: str = "enterprise_knowledge_v2"
+    MILVUS_DIM: int = 512
     
     # ChromaDB配置
     CHROMA_PERSIST_DIR: str = "./chroma_db"  # ChromaDB持久化目录
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     
     # 通用向量数据库配置（根据provider自动选择对应的配置）
     VECTOR_STORE_COLLECTION: str = ""  # 自动设置，或手动指定
-    VECTOR_STORE_DIM: int = 1024  # 向量维度
+    VECTOR_STORE_DIM: int = 512  # 向量维度
     
     # Redis 配置 (用于长期记忆)
     REDIS_URL: str = "redis://localhost:6379/0"
@@ -72,7 +72,7 @@ class Settings(BaseSettings):
     
     # vLLM配置（OpenAI兼容）
     VLLM_API_BASE: str = "http://localhost:8000/v1"  # vLLM服务器地址
-    VLLM_API_KEY: str = "sk-local-dev"  # vLLM通常可以接受任意值，但必须有
+    VLLM_API_KEY: str = "sk-test"  # vLLM通常可以接受任意值，但必须有
     VLLM_MODEL: str = "Qwen/Qwen2.5-1.5B-Instruct"  # vLLM模型路径
     
     # 通用LLM配置（根据provider自动选择对应的配置）

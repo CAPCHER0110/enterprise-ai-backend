@@ -21,7 +21,7 @@ class RedisConnectionPool:
     """
     _pool: Optional[aioredis.ConnectionPool] = None
     _client: Optional[aioredis.Redis] = None
-    _thread_lock = threading.Lock()
+    _thread_lock = threading.RLock()
     _async_lock: Optional[asyncio.Lock] = None
     _initialized = False
     
@@ -53,8 +53,10 @@ class RedisConnectionPool:
                         settings.REDIS_URL,
                         max_connections=settings.REDIS_MAX_CONNECTIONS,
                         decode_responses=True,
-                        retry_on_timeout=True,
-                        health_check_interval=settings.REDIS_HEALTH_CHECK_INTERVAL
+                        #retry_on_timeout=True,
+                        health_check_interval=settings.REDIS_HEALTH_CHECK_INTERVAL,
+                        socket_timeout=5.0,        # 连接超时 5秒
+                        socket_connect_timeout=5.0 # 建立连接超时 5秒
                     )
                     logger.info(
                         f"Redis connection pool created: "

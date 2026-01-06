@@ -9,6 +9,7 @@ pydantic-settings>=2.1.0
 # AI 核心栈 (LlamaIndex 全家桶)
 llama-index-core>=0.10.0
 llama-index-llms-openai>=0.1.0
+llama-index-llms-openai-like>=0.1.0
 llama-index-llms-anthropic>=0.1.0
 llama-index-embeddings-huggingface>=0.1.0
 llama-index-vector-stores-milvus>=0.1.0
@@ -24,7 +25,7 @@ mem0ai>=0.1.0  # Mem0记忆管理
 
 # 基础设施驱动
 pymilvus>=2.3.0
-redis[hiredis]>=5.0.0
+redis>=5.0.0
 python-multipart>=0.0.9
 httpx>=0.26.0
 

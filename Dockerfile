@@ -18,10 +18,10 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 #RUN pip install --upgrade pip && \
 #    pip install --no-cache-dir -r requirements.txt
-#RUN pip install --upgrade pip && \
-#    pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+    pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+#RUN pip install --upgrade pip && \
+#    pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # ==========================================
 # Stage 2: Runtime (运行阶段)
